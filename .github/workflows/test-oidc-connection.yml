@@ -28,3 +28,29 @@ jobs:
         aws ec2 describe-instances \
           --query "Reservations[*].Instances[*].InstanceId" \
           --output table
+
+
+    - name: Test AWS CLI access
+      run: |
+        echo "Testing AWS CLI access..."
+        aws sts get-caller-identity
+        echo "✅ OIDC connection successful!"
+    
+    - name: Test basic AWS operations
+      run: |
+        echo "Testing basic AWS operations..."
+        aws sts get-caller-identity --query 'Account' --output text
+        aws sts get-caller-identity --query 'Arn' --output text
+        
+    - name: List S3 buckets (if permissions allow)
+      continue-on-error: true
+      run: |
+        echo "Testing S3 access..."
+        aws s3 ls || echo "⚠️ S3 access not configured or no permissions"
+    
+    - name: Test EC2 describe (if permissions allow)
+      continue-on-error: true
+      run: |
+        echo "Testing EC2 access..."
+        aws ec2 describe-regions --query 'Regions[0].RegionName' --output text || echo "⚠️ EC2 access not configured or no permissions"
+
