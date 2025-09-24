@@ -17,14 +17,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Configure AWS credentials using OIDC
+    - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}
+        role-to-assume: arn:aws:iam::288761771442:role/github-actions-workflow-roles
         aws-region: us-west-2
-
-    - name: List EC2 Instances
-      run: |
-        aws ec2 describe-instances \
-          --query "Reservations[*].Instances[*].InstanceId" \
-          --output table
+        audience: sts.amazonaws.com
+        output-env-credentials: true
