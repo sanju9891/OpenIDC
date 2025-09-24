@@ -24,3 +24,9 @@ jobs:
         aws-region: us-west-2
         audience: sts.amazonaws.com
         output-env-credentials: true
+
+    - name: List EC2 Instances
+      run: |
+        aws ec2 describe-instances \
+          --query "Reservations[*].Instances[*].InstanceId" \
+          --output table
